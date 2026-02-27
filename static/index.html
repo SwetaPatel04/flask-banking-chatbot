@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic page setup -->
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banking Chatbot</title>
+
+  <!-- Google Fonts — Clash Display for headings, JetBrains Mono for chat -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --bg:        #f5f0e8;   /* warm off-white background */
+      --panel:     #ffffff;   /* white chat panel */
+      --border:    #e0d8cc;   /* warm border */
+      --accent:    #006b3f;   /* TD green */
+      --accent2:   #004d2e;   /* darker TD green */
+      --user-bg:   #006b3f;   /* user message bubble — TD green */
+      --bot-bg:    #f0ede6;   /* bot message bubble — warm grey */
+      --text:      #1a1a1a;   /* main text */
+      --muted:     #888880;   /* secondary text */
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Reset ── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: var(--accent);
+      color: white;
+    }
+
+    /* TD logo area */
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    /* Green TD logo square */
+    .td-logo {
+      width: 36px; height: 36px;
+      background: white;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    /* Bank name in nav */
+    .nav-title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* Online indicator */
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      opacity: 0.85;
+    }
+
+    /* Pulsing dot */
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #7fffb0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Main layout ── */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1rem;
+    }
+
+    /* ── Chat container ── */
+    .chat-container {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── Suggested questions chips ── */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Individual suggestion chip */
+    .chip {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .chip:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    /* ── Chat messages panel ── */
+    .chat-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      /* fixed height with scroll */
+      height: 420px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      /* smooth scroll when new messages appear */
+      scroll-behavior: smooth;
+    }
+
+    /* ── Individual message row ── */
+    .message-row {
+      display: flex;
+      gap: 0.7rem;
+      animation: fadeUp 0.25s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* User message aligned to the right */
+    .message-row.user {
+      flex-direction: row-reverse;
+    }
+
+    /* Avatar circle */
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* Bot avatar — TD green */
+    .avatar.bot  { background: var(--accent); color: white; }
+    /* User avatar — dark */
+    .avatar.user { background: var(--text); color: white; }
+
+    /* Message bubble */
+    .bubble {
+      max-width: 75%;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    /* Bot bubble — warm grey */
+    .bubble.bot {
+      background: var(--bot-bg);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    /* User bubble — TD green */
+    .bubble.user {
+      background: var(--user-bg);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* Intent + confidence tag shown under bot messages */
+    .meta {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Typing indicator (three dots) ── */
+    .typing {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0;
+    }
+
+    .typing span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1s infinite;
+    }
+
+    /* Stagger the bounce animation for each dot */
+    .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .typing span:nth-child(3) { animation-delay: 0.30s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-5px); }
+    }
+
+    /* ── Input area ── */
+    .input-area {
+      display: flex;
+      gap: 0.7rem;
+    }
+
+    /* Text input field */
+    .input-area input {
+      flex: 1;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-area input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Send button */
+    .btn-send {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.5rem;
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-send:hover    { background: var(--accent2); }
+    .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Stats row ── */
+    .stats {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      text-align: center;
+      flex: 1;
+    }
+
+    .stat-number {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <div class="nav-brand">
+      <div class="td-logo">B</div>
+      <span class="nav-title">Banking Virtual Assistant</span>
+    </div>
+    <div class="nav-status">
+      <span class="dot"></span>
+      Online
+    </div>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main>
+    <div class="chat-container">
+
+      <!-- Suggested question chips -->
+      <div class="suggestions">
+        <span class="chip" onclick="sendChip(this)">Branch hours</span>
+        <span class="chip" onclick="sendChip(this)">Lost my card</span>
+        <span class="chip" onclick="sendChip(this)">Check my balance</span>
+        <span class="chip" onclick="sendChip(this)">Transfer money</span>
+        <span class="chip" onclick="sendChip(this)">Reset my PIN</span>
+        <span class="chip" onclick="sendChip(this)">Open an account</span>
+        <span class="chip" onclick="sendChip(this)">Interest rates</span>
+        <span class="chip" onclick="sendChip(this)">Technical support</span>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number" id="msgCount">0</div>
+          <div class="stat-label">Messages</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="avgConf">—</div>
+          <div class="stat-label">Avg Confidence</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="intentCount">0</div>
+          <div class="stat-label">Intents Matched</div>
+        </div>
+      </div>
+
+      <!-- Chat messages panel -->
+      <div class="chat-panel" id="chatPanel">
+        <!-- Welcome message from bot -->
+        <div class="message-row bot">
+          <div class="avatar bot">TD</div>
+          <div>
+            <div class="bubble bot">
+              Hello! I'm virtual banking assistant. I can help you with branch hours, lost cards, account balance, transfers, and more. How can I help you today?
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="typing" id="typing">
+          <div class="avatar bot">B</div>
+          <div class="bubble bot" style="padding: 0.9rem 1rem">
+            <div style="display:flex; gap:5px; align-items:center">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div class="input-area">
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Type your banking question..."
+          onkeypress="handleKeyPress(event)"
+        />
+        <button class="btn-send" id="sendBtn" onclick="sendMessage()">Send</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Track session stats
+    let messageCount  = 0;
+    let totalConf     = 0;
+    let intentMatched = 0;
+
+    // Send message when Enter key is pressed
+    function handleKeyPress(e) {
+      if (e.key === "Enter") sendMessage();
+    }
+
+    // Send a suggestion chip as a message
+    function sendChip(chip) {
+      document.getElementById("userInput").value = chip.textContent;
+      sendMessage();
+    }
+
+    // Main function to send message and get bot response
+    async function sendMessage() {
+      // Get the message from input
+      const input   = document.getElementById("userInput");
+      const message = input.value.trim();
+
+      // Don't send empty messages
+      if (!message) return;
+
+      // Clear input field
+      input.value = "";
+
+      // Add user message to chat
+      addMessage(message, "user");
+
+      // Show typing indicator while waiting for response
+      const typing = document.getElementById("typing");
+      typing.style.display = "flex";
+
+      // Scroll to bottom
+      scrollToBottom();
+
+      // Disable send button while waiting
+      const btn    = document.getElementById("sendBtn");
+      btn.disabled = true;
+
+      try {
+        // Send message to Flask API
+        const response = await fetch("http://localhost:5000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+
+        // Parse the response
+        const data = await response.json();
+
+        // Hide typing indicator
+        typing.style.display = "none";
+
+        // Add bot response to chat
+        addMessage(
+          data.response,
+          "bot",
+          data.intent,
+          data.confidence
+        );
+
+        // Update session stats
+        messageCount++;
+        totalConf    += data.confidence;
+        if (data.intent !== "unknown") intentMatched++;
+
+        document.getElementById("msgCount").textContent  = messageCount;
+        document.getElementById("avgConf").textContent   = (totalConf / messageCount * 100).toFixed(0) + "%";
+        document.getElementById("intentCount").textContent = intentMatched;
+
+      } catch (err) {
+        // Hide typing indicator on error
+        typing.style.display = "none";
+        addMessage(
+          "Sorry, I can't connect to the server. Please make sure Flask is running.",
+          "bot"
+        );
+        console.error(err);
+      }
+
+      // Re-enable send button
+      btn.disabled = false;
+
+      // Scroll to bottom after response
+      scrollToBottom();
+    }
+
+    // Adds a message bubble to the chat panel
+    function addMessage(text, sender, intent = null, confidence = null) {
+      const panel   = document.getElementById("chatPanel");
+      const typing  = document.getElementById("typing");
+
+      // Create message row
+      const row     = document.createElement("div");
+      row.className = `message-row ${sender}`;
+
+      // Build meta info for bot messages
+      let meta = "";
+      if (sender === "bot" && intent && confidence !== null) {
+        meta = `<div class="meta">Intent: ${intent} · Confidence: ${(confidence * 100).toFixed(0)}%</div>`;
+      }
+
+      // Build avatar label
+      const avatarLabel = sender === "bot" ? "B" : "You";
+
+      // Set the HTML for this message row
+      row.innerHTML = `
+        <div class="avatar ${sender}">${avatarLabel}</div>
+        <div>
+          <div class="bubble ${sender}">${text}</div>
+          ${meta}
+        </div>
+      `;
+
+      // Insert before the typing indicator so typing stays at bottom
+      panel.insertBefore(row, typing);
+
+      // Scroll to bottom
+      scrollToBottom();
+    }
+
+    // Scrolls the chat panel to the bottom
+    function scrollToBottom() {
+      const panel = document.getElementById("chatPanel");
+      panel.scrollTop = panel.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hi", "hello", "hey", "good morning", "good afternoon",
+        "good evening", "howdy", "what's up", "greetings", "hi there",
+        "hello there", "hey there", "good day", "hi bot", "hello bot",
+        "start", "help me", "i need help", "can you help me"
+      ],
+      "responses": [
+        "Hello! Welcome to our bank. How can I help you today?",
+        "Hi there! How can I assist you with your banking needs?",
+        "Hey! What can I do for you today?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "bye", "goodbye", "see you", "see ya", "take care",
+        "talk later", "have a good day", "exit", "quit", "done",
+        "that's all", "nothing else", "i'm done", "farewell",
+        "see you later", "catch you later", "good night", "gtg"
+      ],
+      "responses": [
+        "Goodbye! Have a great day!",
+        "Thank you for banking with us. Take care!",
+        "See you soon! Don't hesitate to reach out anytime."
+      ]
+    },
+    {
+      "tag": "branch_hours",
+      "patterns": [
+        "what are your hours", "when are you open", "branch hours",
+        "opening hours", "closing time", "what time do you close",
+        "what time do you open", "are you open on weekends",
+        "sunday hours", "saturday hours", "when does the bank close",
+        "when does the bank open", "is the bank open today",
+        "bank hours", "branch hours", "location hours",
+        "are you open now", "what time is the bank open until",
+        "bank open on saturday", "bank open on sunday"
+      ],
+      "responses": [
+        "Most branches are open Monday to Friday 9am-5pm, and Saturday 9am-3pm. Some locations may vary.",
+        "Our standard branch hours are Mon-Fri 9am-5pm, Sat 9am-3pm. Please check our branch locator for your nearest branch."
+      ]
+    },
+    {
+      "tag": "lost_card",
+      "patterns": [
+        "lost my card", "card stolen", "stolen card", "missing card",
+        "lost debit card", "lost credit card", "report lost card",
+        "cancel my card", "block my card", "card is missing",
+        "i lost my card", "my card was stolen", "freeze my card",
+        "suspend my card", "deactivate my card", "card not found",
+        "report stolen card", "lost visa card", "lost mastercard",
+        "i cannot find my card", "card has been stolen"
+      ],
+      "responses": [
+        "If your card is lost or stolen, please call us immediately at 1-800-000-0000 (24/7). You can also lock your card instantly through our mobile app.",
+        "To report a lost or stolen card, call 1-800-000-0000 anytime. You can also temporarily lock your card in our mobile app under Card Controls."
+      ]
+    },
+    {
+      "tag": "interest_rates",
+      "patterns": [
+        "interest rate", "current interest rate", "mortgage rate",
+        "savings rate", "what is the interest rate", "loan interest",
+        "GIC rate", "TFSA interest", "RRSP rate", "prime rate",
+        "what is the prime rate", "current mortgage rate",
+        "best savings rate", "high interest savings", "fixed rate",
+        "variable rate", "interest on savings", "loan rate",
+        "personal loan rate", "line of credit rate", "heloc rate"
+      ],
+      "responses": [
+        "Our interest rates vary by product. For current mortgage rates, savings rates, and GIC rates, please visit our website or speak with an advisor.",
+        "For the most up-to-date interest rates on mortgages, savings accounts, and loans, please visit our website or call 1-800-000-0000."
+      ]
+    },
+    {
+      "tag": "reset_pin",
+      "patterns": [
+        "reset my pin", "forgot my pin", "change my pin", "pin reset",
+        "how to change pin", "update my pin", "new pin", "pin help",
+        "forgot pin", "change debit pin", "i forgot my pin",
+        "need to reset pin", "pin not working", "wrong pin",
+        "locked out of pin", "pin locked", "reset debit pin",
+        "change credit card pin", "how do i change my pin",
+        "update debit card pin", "set new pin"
+      ],
+      "responses": [
+        "You can reset your PIN at any of our ATMs by selecting 'Change PIN' from the main menu. You can also visit a branch with valid ID.",
+        "To change your PIN, visit any of our ATMs and select 'Change PIN'. If you need further help, call 1-800-000-0000 or visit your nearest branch."
+      ]
+    },
+    {
+      "tag": "account_balance",
+      "patterns": [
+        "check my balance", "what is my balance", "account balance",
+        "how much money do i have", "check account", "view balance",
+        "current balance", "available balance", "funds available",
+        "how much is in my account", "show my balance",
+        "what is my account balance", "check my account balance",
+        "see my balance", "balance inquiry", "account funds",
+        "how much money is in my account", "remaining balance",
+        "what is my available balance", "check funds"
+      ],
+      "responses": [
+        "You can check your balance anytime through Online Banking, our mobile app, any ATM, or by calling our EasyLine at 1-800-000-0000.",
+        "Your balance is available 24/7 through our mobile app, online banking, or at any of our ATMs."
+      ]
+    },
+    {
+      "tag": "transfer_money",
+      "patterns": [
+        "transfer money", "send money", "move money", "e transfer",
+        "interac transfer", "wire transfer", "transfer funds",
+        "send funds", "pay someone", "how to transfer",
+        "how do i send money", "etransfer", "send an etransfer",
+        "how to do an etransfer", "transfer between accounts",
+        "move funds", "send payment", "pay a friend",
+        "international transfer", "send money abroad",
+        "transfer to another bank", "how to wire money"
+      ],
+      "responses": [
+        "You can transfer money using Online Banking or our mobile app. For Interac e-Transfer, go to 'Send Money' and enter the recipient's email or phone number.",
+        "We support Interac e-Transfer, internal transfers, and wire transfers. Log in to Online Banking or our mobile app to get started."
+      ]
+    },
+    {
+      "tag": "open_account",
+      "patterns": [
+        "open an account", "new account", "create account", "apply for account",
+        "how to open account", "start banking", "become a customer",
+        "open chequing account", "open savings account",
+        "i want to open an account", "how do i open an account",
+        "sign up for banking", "apply for chequing account",
+        "apply for savings account", "new banking account",
+        "register for online banking", "create a new account",
+        "get a bank account", "start an account"
+      ],
+      "responses": [
+        "You can open an account online, through our mobile app, or by visiting any branch with valid government-issued ID.",
+        "Opening an account is easy! Visit our website or drop by any branch with your ID. The process takes about 15 minutes."
+      ]
+    },
+    {
+      "tag": "technical_support",
+      "patterns": [
+        "app not working", "can't login", "website down", "technical issue",
+        "online banking problem", "error message", "app crash",
+        "can't access account", "login problem", "forgot password",
+        "password reset", "reset my password", "locked out",
+        "account locked", "can't sign in", "login not working",
+        "app not working", "online banking not working",
+        "website not loading", "app keeps crashing", "forgot username",
+        "reset username", "2fa not working", "verification code not working"
+      ],
+      "responses": [
+        "For technical support with Online Banking or our app, please call 1-800-000-0000 or visit our website support page. Our tech support team is available 24/7.",
+        "If you're having trouble with our digital services, try clearing your browser cache or reinstalling the app. For further help, call 1-800-000-0000."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "thanks", "thank you", "that helped", "great", "awesome",
+        "perfect", "got it", "appreciate it", "cheers", "helpful",
+        "thank you so much", "many thanks", "thanks a lot",
+        "that was helpful", "you helped me", "great help",
+        "thanks for the help", "much appreciated", "brilliant",
+        "exactly what i needed"
+      ],
+      "responses": [
+        "You're welcome! Is there anything else I can help you with?",
+        "Happy to help! Let me know if you have any other questions.",
+        "Glad I could assist! Anything else?"
+      ]
+    }
+  ]
+}
